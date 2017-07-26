@@ -1,0 +1,51 @@
+﻿@model List<PermissionMaking.ASP.NET.MVC.Models.MyArea>
+@{
+    ViewBag.Title = "Permission";
+    string Id = ViewBag.UserId;
+}
+<span>Check All</span><input type="checkbox" id="selectAll" onclick="checkall()"/>
+<h2>Permission</h2>
+<div id="checker">
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        @Html.Hidden("Id", Id)
+        foreach (var Area in Model)
+        {
+            <div class="panel panel-default">
+                <div class="panel-heading">@Area.Name</div>
+                <div class="panel-body">
+                    <div class="row">
+
+                        @foreach (var Controllers in Area.MyControllers)
+                        {
+                            <div class="col-md-4">
+                                <h4 class="" style="color: #2A3F54; text-underline: black;">@Controllers.Name</h4>
+                                @foreach (var Action in Controllers.MyActions)
+                                {
+                                    <input type="checkbox" name="UserPermission" value="@(@Area.Name + "_" + Controllers.Name + "_" + Action.Name + "_" + Action.IsHttpPost)" />
+                                    <span>@Action.Name</span><span style="margin-left:5px" class="badge">@(Action.IsHttpPost == true ? "Post" : "")</span>
+                                    <br />
+                                }
+                            </div>
+
+                        }
+                    </div>
+
+                </div>
+
+            </div>
+        }
+        <input type="submit" class="btn btn-info" value="Save"/>
+    }
+</div>
+@section Scripts {
+    <script>
+        $("#selectAll").click(function(){
+            $('input:checkbox').not(this).prop('checked', this.checked);
+        });
+    </script>
+}
+
+
+
